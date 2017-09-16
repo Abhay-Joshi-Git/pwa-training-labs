@@ -25,14 +25,14 @@ limitations under the License.
   <div id="qunit-fixture"></div>
   <script src="https://code.jquery.com/qunit/qunit-2.0.1.js"></script>
   <script>
-    QUnit.test('pages-cache-v1 exists', function(assert) {
+    QUnit.test('static-cache-v1 exists', function(assert) {
       var done = assert.async();
       var cacheName;
       caches.keys().then(function(cacheNames) {
-        if (cacheNames.indexOf('pages-cache-v1') > -1) {
-          cacheName = cacheNames[cacheNames.indexOf('pages-cache-v1')];
+        if (cacheNames.indexOf('static-cache-v1') > -1) {
+          cacheName = cacheNames[cacheNames.indexOf('static-cache-v1')];
         }
-        assert.equal(cacheName, 'pages-cache-v1', 'pages-cache-v1 exists');
+        assert.equal(cacheName, 'static-cache-v1', 'static-cache-v1 exists');
         done();
       });
     });
