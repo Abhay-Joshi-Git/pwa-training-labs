@@ -19,27 +19,78 @@ var app = (function() {
 
   function getImageName(country) {
     // TODO 2.1 - create a promise
+    country = country.toLowerCase();
+    var promiseOfImageName = new Promise(function(resolve, reject) {
+      setTimeout(function() {
+        if (country === 'spain' || country === 'chile' || country === 'peru') {
+          resolve(country + '.png');
+        } else {
+          reject(Error('Didn\'t receive a valid country name!'));
+        }
+      }, 1000);
+    });
+    console.log(promiseOfImageName);
+    return promiseOfImageName;
   }
 
   function isSpain(country) {
     // TODO - Optional
+    if (country === 'Spain') {
+      return Promise.resolve('Spain it is')      
+    } else {
+      return Promise.reject('No Spain, no gain...');
+    }
   }
 
   function flagChain(country) {
     // TODO 2.2 - use the promise
+    return getImageName(country)
+    .catch(fallbackName)
+    .then(fetchFlag)
+    .then(processFlag)
+    .then(appendFlag)
+    .catch(function(error) {
+      logError(error);
+      throw error;
+    });
   }
 
   function spainTest(country) {
     // TODO - Optional
+    return isSpain(country)
+    .then(returnTrue)
+    .catch(returnFalse);
   }
 
   function allFlags(promiseList) {
     // TODO
+    return Promise.all(promiseList)
+    .catch(returnFalse);
   }
 
   // TODO 4.1 - Promise.all
+  var promises = [
+    getImageName('Spain'),
+    getImageName('Chile'),
+    getImageName('Peru')
+  ];
+  
+  allFlags(promises).then(function(result) {
+    console.log(result);
+  });
 
   // TODO 4.2 - Promise.race
+  var promise1 = new Promise(function(resolve, reject) {
+    setTimeout(resolve, 500, 'one');
+  });
+  
+  var promise2 = new Promise(function(resolve, reject) {
+    setTimeout(resolve, 100, 'two');
+  });
+  
+  Promise.race([promise1, promise2])
+  .then(logSuccess)
+  .catch(logError);
 
   /* Helper functions */
 
