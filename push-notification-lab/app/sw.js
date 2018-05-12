@@ -17,9 +17,60 @@ limitations under the License.
   'use strict';
 
   // TODO 2.6 - Handle the notificationclose event
+  self.addEventListener('notificationclose', function(e) {
+    var notification = e.notification;
+    var primaryKey = notification.data.primaryKey;
+  
+    console.log('Closed notification: ' + primaryKey);
+  });
 
   // TODO 2.7 - Handle the notificationclick event
+  self.addEventListener('notificationclick', function(e) {
+    var notification = e.notification;
+    var primaryKey = notification.data.primaryKey;
+    var action = e.action;
+    console.log('in notification click...');
+
+    if (action === 'close') {
+      notification.close();
+    } else {
+      clients.openWindow('samples/page' + primaryKey + '.html');
+      notification.close();
+    }
+
+    // TODO 5.3 - close all notifications when one is clicked
+  });
 
   // TODO 3.1 - add push event listener
+  self.addEventListener('push', function(e) {
+    var body;
+    console.log('being pushed...');
+  
+    if (e.data) {
+      body = e.data.text();
+    } else {
+      body = 'Default body';
+    }
+  
+    var options = {
+      body: body,
+      icon: 'images/notification-flat.png',
+      vibrate: [100, 50, 100],
+      data: {
+        dateOfArrival: Date.now(),
+        primaryKey: 1
+      },
+      actions: [
+        {action: 'explore', title: 'Go to the site',
+          icon: 'images/checkmark.png'},
+        {action: 'close', title: 'Close the notification',
+          icon: 'images/xmark.png'},
+      ]
+    };
+  
+    e.waitUntil(
+      self.registration.showNotification('Push Notification', options)
+    );
+  });
 
 })();
